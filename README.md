@@ -1,10 +1,8 @@
-# Razorbill v2 · RWX Blast Radius
+# Razorbill v2.1 · RWX Blast Radius
 
-On the 30 official local sample patches, v2 scored **119.095 simulated seconds and zero missed commits**. The previous Razorbill version scored 463.332 on the same sample. Three additional patches were checked against the full SQLGlot test suite. The selector included every failing test for all three. The competition uses different patches and adds its own CPU measurement.
+This update is applied to an existing v2 checkout. Upload the four extracted files to the repository root together and keep the v2 profile.json.gz and coverage_map.py. The official sample scored 127.493 simulated seconds with zero missed commits. The hidden-practice score for this update is unknown.
 
-## Submit
-
-Extract every file into a fresh folder. Upload the files at the root of the existing team repository, including **profile.json.gz**. Keep that file compressed. The Dockerfile copies the prebuilt map into the image. GitHub preserves the previous commit as long as the existing branch history is retained. On RWX, submit the repository URL with the new commit hash, or leave Commit blank to score the latest version on the default branch.
+The selector broadens predictions when imports change and when a test setup or teardown hook affects a whole class. It also schedules additional cheap tests on existing workers, using idle time and a maximum of 350 extra milliseconds of test time for each commit with a nonempty schedule. A fresh class-setup regression caused 50 test errors in the full affected module. This update included all 50. V2 missed 47. The three previously created independent patches also retained all failing tests.
 
 ## How the selector works
 

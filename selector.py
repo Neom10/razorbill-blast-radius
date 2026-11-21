@@ -2,6 +2,7 @@
 
 import json
 from coverage_map import Profile
+from guard import fill, guard
 import re
 import sys
 from collections import defaultdict
@@ -159,8 +160,13 @@ def run(data):
     for patch in sorted((data / "commits").glob("*.patch")):
         files = diff_files(patch.read_text(errors="replace"))
         selected = set()
+        related = set()
         if files:
             for path, edits, hunk in files:
+                related.update(catalog.files.get(words(path.stem), ()))
+                related.update(catalog.files.get(words(path.parent.name), ()))
+                if profile:
+                    selected.update(guard(catalog, profile, path, hunk))
                 inferred = profile.select(path, hunk) if profile else None
                 selected.update(
                     catalog.affected(path, edits, hunk)
@@ -171,7 +177,7 @@ def run(data):
             selected.update(catalog.all)
         print(
             json.dumps(
-                {"commit": patch.stem, "workers": catalog.workers(selected)},
+                {"commit": patch.stem, "workers": fill(catalog, selected, related)},
                 separators=(",", ":"),
             )
         )
